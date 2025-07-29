@@ -18,8 +18,18 @@ jobs:
       
     - name: Zip files
       run: zip -qq -r portal-input.zip .
+
+    - name: List zip contents
+      run: unzip -l portal-input.zip
+
+
+    - name: Check working directory
+      run: |
+        pwd
+        ls -lh
+
       
-    # Call Apimatic Endpoint to generate Portal
+    # Call Apimatic Endpoint to generate 
     - name: Call build endpoint
       id: generate-portal
       run: | 
@@ -41,6 +51,7 @@ jobs:
     - name: list
       run: ls
       
+   # deplooy to netifly   
     - name: Deploy to Netlify
       if: ${{steps.generate-portal.outputs.HTTP_CODE == '200'}}
       uses: nwtgck/actions-netlify@v3.0
@@ -57,7 +68,6 @@ jobs:
         NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
       timeout-minutes: 2
 
-      # Upload Portal Artifact
     - name: Upload Artifact
       if: ${{steps.generate-portal.outputs.HTTP_CODE == '200' }}
       uses: actions/upload-artifact@v4
